@@ -3,10 +3,10 @@ dotenv.config();
 import express, { Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
-/* import logModule from "./modules/log.module"; */
-/* import mongooseModule from "./modules/mongoose.module"; */
+import logModule from "./modules/log.module";
+import mongooseModule from "./modules/mongoose.module";
 import { createServer } from "http";
-/* import components from "./components"; */
+import components from "./components";
 
 async function main(){
 
@@ -17,13 +17,12 @@ async function main(){
   server.use(express.urlencoded({ extended: true }));
   server.use(morgan('dev'));
   server.use(cors());
-/*   server.use('/api', ...components); */
+  server.use('/api', ...components);
 
   let httpServer = createServer(server); 
-    /*  try {
+  try {
     await mongooseModule.connect();
     logModule.success('Database connection successful');
-    
 
     httpServer.listen(port, () => {
       logModule.success(`Server listening on: http://localhost:${port}`);
@@ -31,7 +30,6 @@ async function main(){
   } 
   catch (error) {
     logModule.error(`Failed database connection`);
-  } */
-
+  }
 }
 export default { main };

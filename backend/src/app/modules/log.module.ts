@@ -1,6 +1,5 @@
 import chalk from 'chalk'
 
-
 function _logMessage(color: string, message: string){
   console.log(chalk`{${color} ${message}}`);
 }
