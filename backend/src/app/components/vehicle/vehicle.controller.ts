@@ -1,4 +1,4 @@
-import { Vehicle } from "../../../../../models/vehicle.model";
+import { Vehicle } from "../../models/vehicle.model";
 import repository from "./vehicle.repository";
 
 async function getAllVehicles(): Promise<Vehicle[]>{

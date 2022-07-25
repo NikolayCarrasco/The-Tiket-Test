@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from "express";
-import { Vehicle } from "../../../../../models/vehicle.model";
+import { Vehicle } from "../../models/vehicle.model";
 import response from "../../modules/response.module";
 import controller from "./vehicle.controller";
 
