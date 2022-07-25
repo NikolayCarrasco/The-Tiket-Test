@@ -8,6 +8,11 @@
 
 <ion-content [fullscreen]="true">
 
+  <!-- refresh page -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <!-- List of Vehicles Items -->
   <ion-list *ngFor="let vehicle of vehicles">
     <app-vehicle-item [vehicle]="vehicle"></app-vehicle-item>
