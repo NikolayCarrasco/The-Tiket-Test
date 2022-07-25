@@ -1,5 +1,5 @@
 import { Schema, model, Document } from "mongoose";
-import { Vehicle } from "../../../../../models/vehicle.model";
+import { Vehicle } from "../../models/vehicle.model";
 
 const definition: Partial<Record<keyof Vehicle, any>> = {
 	licensePlate: { type: String, required: true, lowercase: true, trim: true },
