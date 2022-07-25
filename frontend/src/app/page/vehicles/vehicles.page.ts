@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonModal, ToastController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Vehicle } from 'src/core/models/vehicle.model';
+import { VehicleService } from 'src/core/services/vehicle/vehicle.service';
 
 @Component({
   selector: 'app-Vehicles',
@@ -17,7 +18,8 @@ export class Vehicles {
 
   constructor(
     private formBuilder: FormBuilder,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private vehicleService: VehicleService
   ) {
     this.addVehicleForm = this.formBuilder.group({
       licensePlate: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{6}')]],
@@ -25,33 +27,11 @@ export class Vehicles {
       weight: ['', [Validators.required, Validators.pattern('[0-9]{1,9999}')]],
       color: ['', [Validators.required, Validators.pattern('[a-zA-Z]{3,25}')]],
       insurance: ['', [Validators.required]],
-    }),
-    this.vehicles = [
-      {
-        id: '1',
-      	licensePlate: 'asdfasd',
-      	type: 'auto',
-      	weight: 800,
-      	color: 'azul',
-      	insurance: true,
-      },
-      {
-        id: '2',
-      	licensePlate: '1asd2',
-      	type: 'camión',
-      	weight: 1500,
-      	color: 'negro',
-      	insurance: true,
-      },
-      {
-        id: '3',
-      	licensePlate: '3341a',
-      	type: 'moto',
-      	weight: 200,
-      	color: 'naranjo',
-      	insurance: false,
-      },
-    ]
+    })
+  }
+
+  ngOnInit(): void {
+    this.getAllVehicles();
   }
 
   get licensePlate () { return this.addVehicleForm.get('licensePlate'); }
@@ -59,12 +39,22 @@ export class Vehicles {
   get weight () { return this.addVehicleForm.get('weight'); }
   get color () { return this.addVehicleForm.get('color'); }
   get insurance () { return this.addVehicleForm.get('insurance'); }
+  
+  async getAllVehicles() {
+    try {
+      const response: any = await this.vehicleService.getAllVehicles().toPromise;
+      console.log('a')
+      console.log(response);
+    } catch (error) {
+      console.log('Algo ha salido mal');
+    }
+  }
 
   cancel() {
     this.modal.dismiss();
   }
 
-  confirm() {
+  async confirm() {
     if(
       this.licensePlate.status === 'VALID' &&
       this.type.status === 'VALID' &&
@@ -73,11 +63,26 @@ export class Vehicles {
       this.insurance.status === 'VALID'
     ){
       this.successfulAddition();
+      let vehicle: Vehicle = {
+        licensePlate: this.licensePlate.value,
+        type: this.type.value,
+        weight: this.weight.value,
+        color: this.color.value,
+        insurance: this.insurance.value
+      }
+      try {
+        await this.vehicleService.addVehicle(vehicle).toPromise();
+      } catch (error) {
+        console.log('error');
+        this.errorAddition();
+      }
       this.modal.dismiss();
     } else {
       this.incompleteForm();
     }
   }
+
+  /* toast */
 
   async incompleteForm() {
     const toast = await this.toastController.create({
@@ -108,5 +113,4 @@ export class Vehicles {
     });
     toast.present();
   }
-
 }
