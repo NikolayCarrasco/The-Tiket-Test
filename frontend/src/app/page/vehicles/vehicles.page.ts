@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import { Vehicle } from '../../../../../models/vehicle.model'
 import { OverlayEventDetail } from '@ionic/core/components'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Vehicle } from 'src/core/models/vehicle.model';
 
 @Component({
   selector: 'app-Vehicles',
@@ -13,9 +13,6 @@ export class Vehicles {
   
   @ViewChild(IonModal) modal: IonModal;
 
-  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
-  name: string;
-
   public vehicles: Vehicle[];
   public addVehicleForm: FormGroup
 
@@ -24,9 +21,9 @@ export class Vehicles {
   ) {
     this.addVehicleForm = this.formBuilder.group({
       licensePlate: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{6}')]],
-      type: ['', [Validators.required, Validators.pattern('[a-zA-Z]')]],
-      weight: ['', [Validators.required, Validators.pattern('[0-9]{1-9999}')]],
-      color: ['', [Validators.required, Validators.pattern('[a-zA-Z]{3-25}')]],
+      type: ['', [Validators.required, Validators.pattern('[a-zA-Z]{3,25}')]],
+      weight: ['', [Validators.required, Validators.pattern('[0-9]{1,9999}')]],
+      color: ['', [Validators.required, Validators.pattern('[a-zA-Z]{3,25}')]],
       insurance: ['', [Validators.required]],
     }),
     this.vehicles = [
@@ -64,22 +61,20 @@ export class Vehicles {
   get insurance () { return this.addVehicleForm.get('insurance'); }
 
   cancel() {
-    this.modal.dismiss(null, 'cancel');
+    this.modal.dismiss();
   }
 
   confirm() {
-    console.log(this.licensePlate.value);
-    console.log(this.type.value);
-    console.log(this.weight.value);
-    console.log(this.color.value);
-    console.log(this.insurance.value);
-    this.modal.dismiss(this.name, 'confirm');
-  }
-
-  onWillDismiss(event: Event) {
-    const ev = event as CustomEvent<OverlayEventDetail<string>>;
-    if (ev.detail.role === 'confirm') {
-      this.message = `Hello, ${ev.detail.data}!`;
+    if(
+      this.licensePlate.status === 'VALID' &&
+      this.type.status === 'VALID' &&
+      this.weight.status === 'VALID' &&
+      this.color.status === 'VALID' &&
+      this.insurance.status === 'VALID'
+    ){
+      this.modal.dismiss();
+    } else {
+      console.log('completar todos los campos');
     }
   }
 

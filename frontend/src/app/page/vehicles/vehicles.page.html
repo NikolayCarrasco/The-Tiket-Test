@@ -7,8 +7,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  
-  <p>{{ message }}</p>
 
   <!-- List of Vehicles Items -->
   <ion-list *ngFor="let vehicle of vehicles">
@@ -26,21 +24,21 @@
 
 <!-- Form add new vehicle --> 
 
-<ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+<ion-modal trigger="open-modal">
   <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button (click)="cancel()" color="danger"><ion-icon name="close-sharp"></ion-icon></ion-button>
-        </ion-buttons>
-        <ion-title>Nuevo vehículo</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="confirm()" color="primary" [strong]="true"><ion-icon name="checkmark-sharp"></ion-icon></ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
     <form [formGroup]="addVehicleForm">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()" color="danger"><ion-icon name="close-sharp"></ion-icon></ion-button>
+          </ion-buttons>
+          <ion-title>Nuevo vehículo</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" color="primary" [strong]="true"><ion-icon name="checkmark-sharp"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
 
         <ion-item>
           <ion-label position="stacked">Ingresa la patente (sin guion ni espacios)</ion-label>
@@ -66,15 +64,15 @@
         <ion-radio-group value="" formControlName="insurance">
           <ion-item>
             <ion-label>Si</ion-label>
-            <ion-radio slot="end" value="Yes"></ion-radio>
+            <ion-radio slot="end" [value]="true"></ion-radio>
           </ion-item>
           <ion-item>
             <ion-label>No</ion-label>
-            <ion-radio slot="end" value="No"></ion-radio>
+            <ion-radio slot="end" [value]="false"></ion-radio>
           </ion-item>
         </ion-radio-group>
 
+      </ion-content>
     </form>
-    </ion-content>
   </ng-template>
 </ion-modal>
