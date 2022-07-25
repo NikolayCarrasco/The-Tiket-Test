@@ -42,9 +42,7 @@ export class Vehicles {
   
   async getAllVehicles() {
     try {
-      const response: any = await this.vehicleService.getAllVehicles().toPromise;
-      console.log('a')
-      console.log(response);
+      this.vehicles = await this.vehicleService.getAllVehicles().toPromise();
     } catch (error) {
       console.log('Algo ha salido mal');
     }
@@ -62,7 +60,6 @@ export class Vehicles {
       this.color.status === 'VALID' &&
       this.insurance.status === 'VALID'
     ){
-      this.successfulAddition();
       let vehicle: Vehicle = {
         licensePlate: this.licensePlate.value,
         type: this.type.value,
@@ -72,11 +69,14 @@ export class Vehicles {
       }
       try {
         await this.vehicleService.addVehicle(vehicle).toPromise();
+        this.successfulAddition();
+        this.getAllVehicles()
+        this.modal.dismiss();
+
       } catch (error) {
         console.log('error');
         this.errorAddition();
       }
-      this.modal.dismiss();
     } else {
       this.incompleteForm();
     }
@@ -112,5 +112,25 @@ export class Vehicles {
       color: 'danger'
     });
     toast.present();
+  }
+
+  async sameLicensePlate() {
+    const toast = await this.toastController.create({
+      message: 'El vehículo ya está registrado',
+      duration: 2000,
+      position: 'bottom',
+      color: 'danger'
+    });
+    toast.present();
+  }
+
+  /* refresh */
+
+  doRefresh(event) {
+
+    setTimeout(() => {
+      this.getAllVehicles();
+      event.target.complete();
+    }, 2000);
   }
 }
