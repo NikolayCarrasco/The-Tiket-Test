@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonModal } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components'
+import { IonModal, ToastController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Vehicle } from 'src/core/models/vehicle.model';
 
@@ -14,10 +13,11 @@ export class Vehicles {
   @ViewChild(IonModal) modal: IonModal;
 
   public vehicles: Vehicle[];
-  public addVehicleForm: FormGroup
+  public addVehicleForm: FormGroup;
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public toastController: ToastController
   ) {
     this.addVehicleForm = this.formBuilder.group({
       licensePlate: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{6}')]],
@@ -72,10 +72,41 @@ export class Vehicles {
       this.color.status === 'VALID' &&
       this.insurance.status === 'VALID'
     ){
+      this.successfulAddition();
       this.modal.dismiss();
     } else {
-      console.log('completar todos los campos');
+      this.incompleteForm();
     }
+  }
+
+  async incompleteForm() {
+    const toast = await this.toastController.create({
+      message: 'Se deben completar todos los campos.',
+      duration: 2000,
+      position: 'bottom',
+      color: 'warning'
+    });
+    toast.present();
+  }
+
+  async successfulAddition() {
+    const toast = await this.toastController.create({
+      message: 'Se agregó el vehiculo correctamente.',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success'
+    });
+    toast.present();
+  }
+
+  async errorAddition() {
+    const toast = await this.toastController.create({
+      message: 'No se pudo agregar el vehículo.',
+      duration: 2000,
+      position: 'bottom',
+      color: 'danger'
+    });
+    toast.present();
   }
 
 }
